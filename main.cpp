@@ -46,79 +46,47 @@ private:
     vector<Transaction> history;
 
 public:
-    void addBook(string title, string author)
+    void addBook()
     {
+        string title, author;
+
+        cout << "Title: ";
+        getline(cin, title);
+
+        cout << "Author: ";
+        getline(cin, author);
+
+        if (books.count(title))
+        {
+            cout << "Book already exists\n";
+            return;
+        }
+
         books[title] = Book(title, author);
+        cout << "Book added " << endl;
     }
 
-    void addMember(string name, string id)
+    void removeBook()
     {
-        members[name] = Member(name, id);
-    }
+        string title;
 
-    void borrowBook(string memberName, string bookTitle)
-    {
-        if (!members.count(memberName))
-        {
-            cout << "Member not found\n";
-            return;
-        }
+        cout << "Title: ";
+        getline(cin, title);
 
-        if (!books.count(bookTitle))
-        {
-            cout << "Book not found\n";
-            return;
-        }
-
-        if (books[bookTitle].borrowed)
-        {
-            cout << "Book already borrowed\n";
-            return;
-        }
-
-        books[bookTitle].borrowed = true;
-        history.push_back(Transaction(memberName, bookTitle, "borrowed"));
-    }
-
-    void returnBook(string memberName, string bookTitle)
-    {
-        if (!books.count(bookTitle))
-        {
-            cout << "Book not found\n";
-            return;
-        }
-
-        books[bookTitle].borrowed = false;
-        history.push_back(Transaction(memberName, bookTitle, "returned"));
+        books.erase(title);
     }
 
     void listBooks() const
     {
-        cout << "\nBooks:\n";
+        cout << endl
+             << "Books:" << endl;
+
         for (const auto &b : books)
         {
             cout << b.second.title << " - " << b.second.author;
             if (b.second.borrowed)
                 cout << " (borrowed)";
-            cout << "\n";
-        }
-    }
-
-    void listMembers() const
-    {
-        cout << "\nMembers:\n";
-        for (const auto &m : members)
-        {
-            cout << m.second.name << " - " << m.second.id << "\n";
-        }
-    }
-
-    void transactionsReport() const
-    {
-        cout << "\nTransactions:\n";
-        for (const auto &t : history)
-        {
-            cout << t.member << " " << t.type << " " << t.book << "\n";
+            cout << endl;
         }
     }
 
@@ -132,33 +100,192 @@ public:
                 borrowedCount++;
         }
 
-        cout << "\nTotal books: " << books.size() << "\n";
-        cout << "Borrowed books: " << borrowedCount << "\n";
+        cout << endl
+             << "Total books: " << books.size() << endl;
+        cout << "Borrowed books: " << borrowedCount << endl;
+    }
+
+    void addMember()
+    {
+        string name, id;
+
+        cout << "Name: ";
+        getline(cin, name);
+
+        cout << "ID: ";
+        getline(cin, id);
+
+        members[name] = Member(name, id);
+        cout << "Member added" << endl;
+    }
+
+    void removeMember()
+    {
+        string name;
+
+        cout << "Name: ";
+        getline(cin, name);
+
+        members.erase(name);
+    }
+
+    void listMembers() const
+    {
+        cout << endl
+             << "Members:" << endl;
+
+        for (const auto &m : members)
+        {
+            cout << m.second.name << " - " << m.second.id << endl;
+        }
     }
 
     void membersReport() const
     {
-        cout << "\nTotal members: " << members.size() << "\n";
+        cout << endl
+             << "Total members: " << members.size() << endl;
+    }
+
+    void borrowBook()
+    {
+        cout << "Before borowing the book make sure that the member is added to the list!" << endl;
+        string memberName, bookTitle;
+
+        cout << "Member name: ";
+        getline(cin, memberName);
+
+        cout << "Book title: ";
+        getline(cin, bookTitle);
+
+        if (!members.count(memberName))
+        {
+            cout << "Member not found" << endl;
+            cout << "Before borowing the book make sure that the member is added to the list!" << endl;
+            return;
+        }
+
+        if (!books.count(bookTitle))
+        {
+            cout << "Book not found" << endl;
+            return;
+        }
+
+        if (books[bookTitle].borrowed)
+        {
+            cout << "Book already borrowed" << endl;
+            return;
+        }
+
+        books[bookTitle].borrowed = true;
+        history.push_back(Transaction(memberName, bookTitle, "borrowed"));
+        cout << "Book borrowed successfully" << endl;
+    }
+
+    void returnBook()
+    {
+        string memberName, bookTitle;
+
+        cout << "Member name: ";
+        getline(cin, memberName);
+
+        cout << "Book title: ";
+        getline(cin, bookTitle);
+
+        if (!books.count(bookTitle))
+        {
+            cout << "Book not found" << endl;
+            return;
+        }
+
+        books[bookTitle].borrowed = false;
+        history.push_back(Transaction(memberName, bookTitle, "returned"));
+        cout << "Book returned" << endl;
+    }
+
+    void transactionsReport() const
+    {
+        cout << endl
+             << "Transaction history:" << endl;
+
+        for (const auto &t : history)
+        {
+            cout << t.member << " " << t.type << " " << t.book << "endl";
+        }
+    }
+
+    void menu()
+    {
+        int op;
+
+        while (true)
+        {
+            cout << endl
+                 << "===== LIBRARY MENU =====" << endl;
+            cout << "1 Add Book" << endl;
+            cout << "2 Remove Book" << endl;
+            cout << "3 List Books" << endl;
+            cout << "4 Add Member" << endl;
+            cout << "5 Remove Member" << endl;
+            cout << "6 List Members" << endl;
+            cout << "7 Borrow Book" << endl;
+            cout << "8 Return Book" << endl;
+            cout << "9 Books Report" << endl;
+            cout << "10 Members Report" << endl;
+            cout << "11 Transactions Report" << endl;
+            cout << "0 Exit" << endl;
+            cout << "Option: ";
+
+            cin >> op;
+            cin.ignore();
+
+            switch (op)
+            {
+            case 1:
+                addBook();
+                break;
+            case 2:
+                removeBook();
+                break;
+            case 3:
+                listBooks();
+                break;
+            case 4:
+                addMember();
+                break;
+            case 5:
+                removeMember();
+                break;
+            case 6:
+                listMembers();
+                break;
+            case 7:
+                borrowBook();
+                break;
+            case 8:
+                returnBook();
+                break;
+            case 9:
+                booksReport();
+                break;
+            case 10:
+                membersReport();
+                break;
+            case 11:
+                transactionsReport();
+                break;
+            case 0:
+                return;
+            default:
+                cout << "Invalid option" << endl;
+                ;
+            }
+        }
     }
 };
 
 int main()
 {
     Library library;
-
-    library.addBook("Matilda", "Roald Dahl");
-    library.addBook("1984", "George Orwell");
-
-    library.addMember("Ion", "Popescu");
-    library.addMember("Ana", "Ionescu");
-
-    library.borrowBook("Ion", "Matilda");
-
-    library.listBooks();
-    library.listMembers();
-    library.booksReport();
-    library.membersReport();
-    library.transactionsReport();
-
+    library.menu();
     return 0;
 }

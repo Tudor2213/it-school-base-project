@@ -2,104 +2,77 @@
 #include <map>
 #include <vector>
 #include <string>
-// test
+
+using namespace std;
+
 class Book
 {
 public:
-    std::map<std::string, std::string> books;
+    string title;
+    string author;
+    bool borrowed;
 
-    void addBook(std::string t, std::string a)
-    {
-        books[t] = a;
-    }
+    Book() : borrowed(false) {}
 
-    bool exists(std::string t)
-    {
-        return books.count(t);
-    }
-
-    void list()
-    {
-        for (auto &b : books)
-            std::cout << b.first << " " << b.second << "\n";
-    }
-
-    void report()
-    {
-        std::cout << "Total books: " << books.size() << "\n";
-    }
+    Book(string t, string a) : title(t), author(a), borrowed(false) {}
 };
 
 class Member
 {
 public:
-    std::map<std::string, std::string> members;
+    string name;
+    string id;
 
-    void addMember(std::string n, std::string id)
-    {
-        members[n] = id;
-    }
+    Member() {}
 
-    bool exists(std::string n)
-    {
-        return members.count(n);
-    }
-
-    void list()
-    {
-        for (auto &m : members)
-            std::cout << m.first << " " << m.second << "\n";
-    }
-
-    void report()
-    {
-        std::cout << "Total members: " << members.size() << "\n";
-    }
+    Member(string n, string i) : name(n), id(i) {}
 };
 
 class Transaction
 {
-
-    std::vector<std::string> history;
-
 public:
-    void borrow(Member &m, Book &b, std::string mem, std::string book)
-    {
+    string member;
+    string book;
+    string type;
 
-        if (!m.exists(mem) || !b.exists(book))
-        {
-            std::cout << "invalid\n";
-            return;
-        }
-
-        history.push_back(mem + " borrowed " + book);
-    }
-
-    void returnBook(std::string mem, std::string book)
-    {
-        history.push_back(mem + " returned " + book);
-    }
-
-    void list()
-    {
-        for (auto &t : history)
-            std::cout << t << "\n";
-    }
+    Transaction(string m, string b, string t) : member(m), book(b), type(t) {}
 };
 
 int main()
 {
+    map<string, Book> books;
+    map<string, Member> members;
+    vector<Transaction> history;
 
-    Book books;
-    Member members;
-    Transaction t;
+    books["Matilda"] = Book("Matilda", "Roald Dahl");
+    members["Ion"] = Member("Ion", "Popescu");
 
-    books.addBook("Matilda", "Roald Dahl");
-    members.addMember("Ion", "Popescu");
+    if (members.count("Ion") && books.count("Matilda"))
+    {
+        books["Matilda"].borrowed = true;
+        history.push_back(Transaction("Ion", "Matilda", "borrowed"));
+    }
 
-    t.borrow(members, books, "Ion", "Matilda");
+    cout << "Books:\n";
+    for (const auto &b : books)
+    {
+        cout << b.second.title << " - " << b.second.author;
+        if (b.second.borrowed)
+            cout << " (borrowed)";
+        cout << "\n";
+    }
 
-    books.report();
-    members.report();
-    t.list();
+    cout << "\nMembers:\n";
+    for (const auto &m : members)
+    {
+        cout << m.second.name << " - " << m.second.id << "\n";
+    }
+
+    cout << "\nTransactions:\n";
+    for (const auto &t : history)
+    {
+        cout << t.member << " " << t.type << " " << t.book << "\n";
+    }
+
+    return 0;
 }

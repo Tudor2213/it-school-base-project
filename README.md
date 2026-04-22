@@ -1,4 +1,4 @@
-Overview
+<!-- Overview
 
 This project is a console-based library management system written in C++. It was built to simulate how a small library might handle books, members, and borrowing activity. The program runs entirely in the terminal and uses a menu system to guide the user through different actions.
 
@@ -44,4 +44,4 @@ Check transaction history
 
 Author:
 
-Tudor Rotaru
+Tudor Rotaru -->

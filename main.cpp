@@ -58,7 +58,7 @@ public:
 
         if (books.count(title))
         {
-            cout << "Book already exists\n";
+            cout << "Book already exists" << endl;
             return;
         }
 
@@ -73,7 +73,15 @@ public:
         cout << "Title: ";
         getline(cin, title);
 
-        books.erase(title);
+        if (books.count(title))
+        {
+            books.erase(title);
+            return;
+        }
+        else
+        {
+            cout << "Book doesn't exist" << endl;
+        }
     }
 
     void listBooks() const
@@ -115,6 +123,14 @@ public:
         cout << "ID: ";
         getline(cin, id);
 
+        for (const auto &m : members)
+        {
+            if (m.second.id == id)
+            {
+                cout << "There is already a member with this ID" << endl;
+                return;
+            }
+        }
         members[name] = Member(name, id);
         cout << "Member added" << endl;
     }
@@ -209,7 +225,7 @@ public:
 
         for (const auto &t : history)
         {
-            cout << t.member << " " << t.type << " " << t.book << "endl";
+            cout << t.member << " " << t.type << " " << t.book << endl;
         }
     }
 
